@@ -2,7 +2,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=121nat
 PKG_VERSION:=0.6.5
-PKG_RELEASE:=1
+PKG_RELEASE:=3
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://github.com/stubbfel/121nat.git
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
@@ -54,13 +54,32 @@ define Build/Compile
 endef
 
 define Package/121nat/install
-	#$(INSTALL_DIR) $(1)/usr/lib/
-	#$(INSTALL_BIN) $(PKG_BUILD_DIR)/build/121Nat/lib/src/libtins/lib/libtins.a $(1)/usr/lib/
-	#$(INSTALL_BIN) $(PKG_BUILD_DIR)/build/121Nat/lib/src/jsoncpp/src/lib_json/libjsoncpp.a  $(1)/usr/lib/
 	$(INSTALL_DIR) $(1)/usr/bin
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/build/121Nat/src/121Nat $(1)/usr/bin
 	$(INSTALL_DIR) $(1)/etc/121nat
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/src/config.json $(1)/etc/121nat
+	$(INSTALL_DIR) $(1)/etc/init.d/
+	$(INSTALL_BIN) ./files/121nat/121natd $(1)/etc/init.d/
+endef
+
+define Package/121nat/postinst
+#!/bin/sh
+# check if we are on real system
+if [ -z "$${IPKG_INSTROOT}" ]; then
+        echo "Enabling rc.d symlink for 121natd"
+        /etc/init.d/121natd enable
+fi
+exit 0
+endef
+
+define Package/121nat/prerm
+#!/bin/sh
+# check if we are on real system
+if [ -z "$${IPKG_INSTROOT}" ]; then
+        echo "Removing rc.d symlink for 121natd"
+        /etc/init.d/121natd disable
+fi
+exit 0
 endef
 
 $(eval $(call BuildPackage,121nat))

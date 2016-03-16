@@ -1,0 +1,20 @@
+#!/bin/sh /etc/rc.common
+# "new(er)" style init script
+# Look at /lib/functions/service.sh on a running system for explanations of what other SERVICE_
+# options you can use, and when you might want them.
+
+START=99
+
+USE_PROCD=1
+PROG=/usr/bin/121Nat
+CONFFILE=/etc/121nat/config.json
+
+start_service() {
+	procd_open_instance
+	procd_set_param command $PROG $CONFFILE
+	procd_set_param file $CONFFILE
+	procd_set_param respawn
+	procd_set_param stdout 1 # forward stdout of the command to logd
+  	procd_set_param stderr 1 # same for stderr
+	procd_close_instance
+}
