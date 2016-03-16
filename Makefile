@@ -1,7 +1,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=121nat
-PKG_VERSION:=0.5.0
+PKG_VERSION:=0.6.5
 PKG_RELEASE:=1
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://github.com/stubbfel/121nat.git
@@ -28,10 +28,7 @@ endef
 
 define Build/Configure
 	mkdir -p $(PKG_BUILD_DIR)/build/121Nat
-	$(CP) ./files/jsoncpp/CMakeLists.txt  $(PKG_BUILD_DIR)/lib/src/jsoncpp/
 	$(CP) ./files/libtins/CMakeLists.txt  $(PKG_BUILD_DIR)/lib/src/libtins/
-	$(CP) ./files/libtins/src/CMakeLists.txt  $(PKG_BUILD_DIR)/lib/src/libtins/src/
-	$(CP) ./files/121nat/src/CMakeLists.txt  $(PKG_BUILD_DIR)/src/
 	$(CP) ./files/121nat/CMakeLists.txt  $(PKG_BUILD_DIR)/
 
 	IN_OPENWRT=1 \
@@ -49,7 +46,7 @@ define Build/Configure
 	TARGET_CPPFLAGS="$(TARGET_CPPFLAGS)" \
 	TARGET_CFLAGS="$(TARGET_CFLAGS)" \
 	TARGET_LDFLAGS="$(TARGET_LDFLAGS)" \
-	cmake -H$(PKG_BUILD_DIR)/ -B$(PKG_BUILD_DIR)/build/121Nat
+	cmake -H$(PKG_BUILD_DIR)/ -B$(PKG_BUILD_DIR)/build/121Nat/
 endef
 
 define Build/Compile
@@ -57,9 +54,9 @@ define Build/Compile
 endef
 
 define Package/121nat/install
-	$(INSTALL_DIR) $(1)/usr/lib/
-	$(INSTALL_BIN) $(PKG_BUILD_DIR)/build/121Nat/lib/src/libtins/lib/libtins.so.3.3 $(1)/usr/lib/
-	$(INSTALL_BIN) $(PKG_BUILD_DIR)/build/121Nat/lib/src/jsoncpp/src/lib_json/libjsoncpp.a  $(1)/usr/lib/
+	#$(INSTALL_DIR) $(1)/usr/lib/
+	#$(INSTALL_BIN) $(PKG_BUILD_DIR)/build/121Nat/lib/src/libtins/lib/libtins.a $(1)/usr/lib/
+	#$(INSTALL_BIN) $(PKG_BUILD_DIR)/build/121Nat/lib/src/jsoncpp/src/lib_json/libjsoncpp.a  $(1)/usr/lib/
 	$(INSTALL_DIR) $(1)/usr/bin
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/build/121Nat/src/121Nat $(1)/usr/bin
 	$(INSTALL_DIR) $(1)/etc/121nat
